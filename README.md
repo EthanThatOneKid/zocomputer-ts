@@ -1,6 +1,10 @@
 <p align="center">
   <a href="https://www.zo.computer/">
-    <img src="https://www.zo.computer/wordmark.svg" alt="Zo Computer" width="220">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://www.zo.computer/wordmark-white.svg">
+      <source media="(prefers-color-scheme: light)" srcset="https://www.zo.computer/wordmark.svg">
+      <img src="https://www.zo.computer/wordmark.svg" alt="Zo Computer" width="220">
+    </picture>
   </a>
 </p>
 
