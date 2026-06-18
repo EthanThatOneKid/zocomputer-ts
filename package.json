@@ -27,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EthanThatOneKid/zocomputer.git"
+    "url": "git+https://github.com/EthanThatOneKid/zocomputer-ts.git"
   },
   "keywords": [
     "zo",
@@ -38,9 +38,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/EthanThatOneKid/zocomputer/issues"
+    "url": "https://github.com/EthanThatOneKid/zocomputer-ts/issues"
   },
-  "homepage": "https://github.com/EthanThatOneKid/zocomputer#readme",
+  "homepage": "https://github.com/EthanThatOneKid/zocomputer-ts#readme",
   "engines": {
     "node": ">=22"
   },
