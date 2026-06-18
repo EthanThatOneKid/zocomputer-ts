@@ -1,6 +1,6 @@
 {
   "name": "zocomputer",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Unofficial TypeScript client for the Zo Computer API, generated from Zo Computer's public OpenAPI spec",
   "type": "module",
   "main": "./dist/index.js",
