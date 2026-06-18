@@ -27,12 +27,108 @@ New to Zo? [Create a free account with $10 in AI credit](https://zo-computer.cel
 npm install zocomputer
 ```
 
+## Runtime support
+
+`zocomputer` is a pure ESM package built on the standard Fetch API. It works in modern Node.js, Bun, Deno, and browser apps.
+
+### Node.js
+
+```bash
+npm install zocomputer
+```
+
+```ts
+import { client, zoAsk } from 'zocomputer';
+
+client.setConfig({
+  auth: process.env.ZO_API_KEY,
+});
+```
+
+Requires Node.js 22 or newer.
+
+### Bun
+
+```bash
+bun add zocomputer
+```
+
+```ts
+import { client, zoAsk } from 'zocomputer';
+
+client.setConfig({
+  auth: Bun.env.ZO_API_KEY,
+});
+```
+
+### Deno
+
+```bash
+deno add npm:zocomputer
+```
+
+```ts
+import { client, zoAsk } from 'zocomputer';
+
+client.setConfig({
+  auth: Deno.env.get('ZO_API_KEY'),
+});
+```
+
+Run with env and network permissions:
+
+```bash
+deno run --allow-env --allow-net main.ts
+```
+
+### Browser apps
+
+With a bundler:
+
+```bash
+npm install zocomputer
+```
+
+```ts
+import { client, zoAsk } from 'zocomputer';
+```
+
+Do not expose a private Zo API key in frontend code. For authenticated browser usage, call Zo through your backend or issue scoped tokens from your server.
+
+### Browser CDN
+
+For no-build browser demos, import from jsDelivr's ESM endpoint:
+
+```js
+import { client, zoAsk } from 'https://cdn.jsdelivr.net/npm/zocomputer/+esm';
+```
+
+You can also use esm.sh:
+
+```js
+import { client, zoAsk } from 'https://esm.sh/zocomputer';
+```
+
+You can also use unpkg:
+
+```js
+import { client, zoAsk } from 'https://unpkg.com/zocomputer/dist/index.js?module';
+```
+
+For JSPM import maps, generate a browser import map at <https://generator.jspm.io/> with `zocomputer` as a dependency.
+
+Unpinned CDN URLs are convenient for examples and demos. For production pages, pin a version when stability matters:
+
+```js
+import { client, zoAsk } from 'https://cdn.jsdelivr.net/npm/zocomputer@0.1/+esm';
+```
+
 ## Usage
 
 ```ts
-import { createClient, zoAsk } from 'zocomputer';
+import { client, zoAsk } from 'zocomputer';
 
-const client = createClient({
+client.setConfig({
   auth: process.env.ZO_API_KEY,
 });
 
