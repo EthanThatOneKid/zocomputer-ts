@@ -8,7 +8,7 @@
   </a>
 </p>
 
-# zocomputer-ts
+# zocomputer
 
 [![npm version](https://img.shields.io/npm/v/zocomputer.svg)](https://www.npmjs.com/package/zocomputer)
 [![Nightly release](https://github.com/EthanThatOneKid/zocomputer-ts/actions/workflows/nightly-release.yml/badge.svg)](https://github.com/EthanThatOneKid/zocomputer-ts/actions/workflows/nightly-release.yml)
