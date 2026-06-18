@@ -42,9 +42,9 @@ npm install zocomputer
 ```
 
 ```ts
-import { client, zoAsk } from 'zocomputer';
+import { createClient, zoAsk } from 'zocomputer';
 
-client.setConfig({
+const client = createClient({
   auth: process.env.ZO_API_KEY,
 });
 ```
@@ -58,9 +58,9 @@ bun add zocomputer
 ```
 
 ```ts
-import { client, zoAsk } from 'zocomputer';
+import { createClient, zoAsk } from 'zocomputer';
 
-client.setConfig({
+const client = createClient({
   auth: Bun.env.ZO_API_KEY,
 });
 ```
@@ -72,9 +72,9 @@ deno add npm:zocomputer
 ```
 
 ```ts
-import { client, zoAsk } from 'zocomputer';
+import { createClient, zoAsk } from 'zocomputer';
 
-client.setConfig({
+const client = createClient({
   auth: Deno.env.get('ZO_API_KEY'),
 });
 ```
@@ -94,7 +94,7 @@ npm install zocomputer
 ```
 
 ```ts
-import { client, zoAsk } from 'zocomputer';
+import { createClient, zoAsk } from 'zocomputer';
 ```
 
 Do not expose a private Zo API key in frontend code. For authenticated browser usage, call Zo through your backend or issue scoped tokens from your server.
@@ -104,19 +104,19 @@ Do not expose a private Zo API key in frontend code. For authenticated browser u
 For no-build browser demos, import from jsDelivr's ESM endpoint:
 
 ```js
-import { client, zoAsk } from 'https://cdn.jsdelivr.net/npm/zocomputer/+esm';
+import { createClient, zoAsk } from 'https://cdn.jsdelivr.net/npm/zocomputer/+esm';
 ```
 
 You can also use esm.sh:
 
 ```js
-import { client, zoAsk } from 'https://esm.sh/zocomputer';
+import { createClient, zoAsk } from 'https://esm.sh/zocomputer';
 ```
 
 You can also use unpkg:
 
 ```js
-import { client, zoAsk } from 'https://unpkg.com/zocomputer/dist/index.js?module';
+import { createClient, zoAsk } from 'https://unpkg.com/zocomputer/dist/index.js?module';
 ```
 
 For JSPM import maps, generate a browser import map at <https://generator.jspm.io/> with `zocomputer` as a dependency.
@@ -124,15 +124,17 @@ For JSPM import maps, generate a browser import map at <https://generator.jspm.i
 Unpinned CDN URLs are convenient for examples and demos. For production pages, pin a version when stability matters:
 
 ```js
-import { client, zoAsk } from 'https://cdn.jsdelivr.net/npm/zocomputer@0.1/+esm';
+import { createClient, zoAsk } from 'https://cdn.jsdelivr.net/npm/zocomputer/+esm';
 ```
 
 ## Usage
 
-```ts
-import { client, zoAsk } from 'zocomputer';
+Zo API calls require a Zo access token. Create a configured client and pass it to API methods:
 
-client.setConfig({
+```ts
+import { createClient, zoAsk } from 'zocomputer';
+
+const client = createClient({
   auth: process.env.ZO_API_KEY,
 });
 
