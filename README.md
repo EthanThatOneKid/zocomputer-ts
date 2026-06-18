@@ -1,14 +1,19 @@
+<p align="center">
+  <a href="https://www.zo.computer/">
+    <img src="https://www.zo.computer/wordmark.svg" alt="Zo Computer" width="220">
+  </a>
+</p>
+
 # zocomputer-ts
 
 [![npm version](https://img.shields.io/npm/v/zocomputer.svg)](https://www.npmjs.com/package/zocomputer)
 [![Nightly release](https://github.com/EthanThatOneKid/zocomputer-ts/actions/workflows/nightly-release.yml/badge.svg)](https://github.com/EthanThatOneKid/zocomputer-ts/actions/workflows/nightly-release.yml)
 
-Repository for the `zocomputer` npm package.
+TypeScript client library for the Zo Computer API, generated nightly from the public OpenAPI spec at `https://docs.zocomputer.com/openapi.json`.
 
-TypeScript client package for the Zo Computer API, generated from the public OpenAPI spec at `https://docs.zocomputer.com/openapi.json`.
+Distributed on npm as `zocomputer` for convenience.
 
-- Repository: `EthanThatOneKid/zocomputer-ts`
-- Package: `zocomputer`
+New to Zo? [Create a free account with $10 in AI credit](https://zo-computer.cello.so/fFG5xDTfXhY).
 
 ## Install
 
