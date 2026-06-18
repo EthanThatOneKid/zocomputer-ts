@@ -1,6 +1,11 @@
-# zocomputer
+# zocomputer-ts
+
+Repository for the `zocomputer` npm package.
 
 TypeScript client package for the Zo Computer API, generated from the public OpenAPI spec at `https://docs.zocomputer.com/openapi.json`.
+
+- Repository: `EthanThatOneKid/zocomputer-ts`
+- Package: `zocomputer`
 
 ## Install
 

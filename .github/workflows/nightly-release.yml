@@ -1,4 +1,4 @@
-name: Nightly release
+name: Nightly publish zocomputer
 
 on:
   schedule:
@@ -15,7 +15,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: zocomputer-ts-nightly-release
+  group: zocomputer-ts-nightly-publish
   cancel-in-progress: false
 
 jobs:

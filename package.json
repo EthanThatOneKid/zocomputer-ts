@@ -1,7 +1,7 @@
 {
   "name": "zocomputer",
   "version": "0.1.0",
-  "description": "TypeScript client for the Zo Computer API generated from the public OpenAPI spec",
+  "description": "TypeScript client SDK for the Zo Computer API generated from the public OpenAPI spec",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -34,7 +34,8 @@
     "zocomputer",
     "openapi",
     "typescript",
-    "api-client"
+    "api-client",
+    "sdk"
   ],
   "license": "MIT",
   "bugs": {
