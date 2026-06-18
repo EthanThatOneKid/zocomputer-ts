@@ -51,6 +51,18 @@ npm run build
 5. Commits and pushes the updated snapshot
 6. Publishes the new version to npm
 
-Required GitHub secret:
+## npm trusted publishing
 
-- `NPM_TOKEN` with publish access for the `zocomputer` package
+This repository is set up for npm trusted publishing with GitHub Actions OIDC, not a long-lived `NPM_TOKEN`.
+
+Before nightly publish can work:
+
+1. Publish `zocomputer` once manually from your npm account so the package exists on npm.
+2. In npm package settings, add a trusted publisher for:
+   - Owner: `EthanThatOneKid`
+   - Repository: `zocomputer-ts`
+   - Workflow filename: `nightly-release.yml`
+   - Allowed action: `npm publish`
+3. After OIDC publish is working, remove any old publish token and lock the package to trusted publishing in npm settings.
+
+No GitHub secret is required for normal publishing after that bootstrap step.

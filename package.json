@@ -42,6 +42,9 @@
     "url": "https://github.com/EthanThatOneKid/zocomputer-ts/issues"
   },
   "homepage": "https://github.com/EthanThatOneKid/zocomputer-ts#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=22"
   },
