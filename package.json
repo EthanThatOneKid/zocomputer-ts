@@ -1,0 +1,51 @@
+{
+  "name": "zocomputer",
+  "version": "0.1.0",
+  "description": "TypeScript client for the Zo Computer API generated from the public OpenAPI spec",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./openapi.json": "./openapi/openapi.json"
+  },
+  "files": [
+    "dist",
+    "openapi/openapi.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "generate": "openapi-ts",
+    "sync:openapi": "node ./scripts/sync-openapi.mjs",
+    "check": "npm run generate && npm run build",
+    "prepublishOnly": "npm run generate && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EthanThatOneKid/zocomputer.git"
+  },
+  "keywords": [
+    "zo",
+    "zocomputer",
+    "openapi",
+    "typescript",
+    "api-client"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EthanThatOneKid/zocomputer/issues"
+  },
+  "homepage": "https://github.com/EthanThatOneKid/zocomputer#readme",
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "0.98.2",
+    "typescript": "6.0.3"
+  }
+}
