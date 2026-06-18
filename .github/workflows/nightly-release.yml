@@ -156,7 +156,7 @@ jobs:
           if git rev-parse "v$VERSION" >/dev/null 2>&1; then
             echo "Tag v$VERSION already exists"
           else
-            git tag "v$VERSION"
+            git tag -a "v$VERSION" -m "v$VERSION"
           fi
 
       - name: Publish to npm
@@ -167,4 +167,4 @@ jobs:
         if: steps.release.outputs.should_publish == 'true'
         env:
           VERSION: ${{ steps.version.outputs.version }}
-        run: git push origin main --follow-tags
+        run: git push origin main "v$VERSION"
