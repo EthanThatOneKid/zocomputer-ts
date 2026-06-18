@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       force_publish:
-        description: 'Publish even if openapi.json did not change'
+        description: 'Publish even if no release changes were detected'
         required: false
         default: 'false'
 
@@ -42,58 +42,129 @@ jobs:
       - name: Sync latest OpenAPI spec
         run: npm run sync:openapi
 
-      - name: Detect spec changes
-        id: changes
+      - name: Detect release changes
+        id: release
         env:
           FORCE_PUBLISH: ${{ github.event.inputs.force_publish || 'false' }}
         run: |
-          if [ "$FORCE_PUBLISH" = "true" ]; then
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
+          PUBLISHED_VERSION="$(npm view zocomputer version 2>/dev/null || echo "")"
+          PACKAGE_VERSION="$(node -e "console.log(JSON.parse(require('node:fs').readFileSync('package.json', 'utf8')).version)")"
+
           if git diff --quiet -- openapi/openapi.json; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
+            SPEC_CHANGED="false"
           else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
+            SPEC_CHANGED="true"
           fi
+
+          LATEST_TAG="$(git tag --list 'v*' --sort=-v:refname | head -n 1)"
+          if [ -n "$LATEST_TAG" ] && ! git diff --quiet "$LATEST_TAG"..HEAD -- README.md package.json package-lock.json src openapi tsconfig.json openapi-ts.config.ts; then
+            PACKAGE_CHANGED="true"
+          else
+            PACKAGE_CHANGED="false"
+          fi
+
+          if [ "$PACKAGE_VERSION" != "$PUBLISHED_VERSION" ]; then
+            VERSION_PENDING="true"
+          else
+            VERSION_PENDING="false"
+          fi
+
+          SHOULD_PUBLISH="false"
+          BUMP_VERSION="false"
+          REASON="no release changes detected"
+
+          if [ "$VERSION_PENDING" = "true" ]; then
+            SHOULD_PUBLISH="true"
+            REASON="package.json version $PACKAGE_VERSION is not published"
+          fi
+
+          if [ "$SPEC_CHANGED" = "true" ]; then
+            SHOULD_PUBLISH="true"
+            if [ "$VERSION_PENDING" != "true" ]; then
+              BUMP_VERSION="true"
+            fi
+            REASON="OpenAPI spec changed"
+          fi
+
+          if [ "$PACKAGE_CHANGED" = "true" ]; then
+            SHOULD_PUBLISH="true"
+            if [ "$VERSION_PENDING" != "true" ]; then
+              BUMP_VERSION="true"
+            fi
+            REASON="package inputs changed since $LATEST_TAG"
+          fi
+
+          if [ "$FORCE_PUBLISH" = "true" ]; then
+            SHOULD_PUBLISH="true"
+            REASON="forced publish"
+            if [ "$VERSION_PENDING" != "true" ]; then
+              BUMP_VERSION="true"
+            fi
+          fi
+
+          echo "published_version=$PUBLISHED_VERSION" >> "$GITHUB_OUTPUT"
+          echo "package_version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "should_publish=$SHOULD_PUBLISH" >> "$GITHUB_OUTPUT"
+          echo "bump_version=$BUMP_VERSION" >> "$GITHUB_OUTPUT"
+          echo "reason=$REASON" >> "$GITHUB_OUTPUT"
+
+          echo "Published version: ${PUBLISHED_VERSION:-none}"
+          echo "Package version: $PACKAGE_VERSION"
+          echo "Spec changed: $SPEC_CHANGED"
+          echo "Latest tag: ${LATEST_TAG:-none}"
+          echo "Package inputs changed: $PACKAGE_CHANGED"
+          echo "Version pending: $VERSION_PENDING"
+          echo "Should publish: $SHOULD_PUBLISH"
+          echo "Bump version: $BUMP_VERSION"
+          echo "Reason: $REASON"
 
       - name: Stop when nothing changed
-        if: steps.changes.outputs.changed != 'true'
-        run: echo "openapi.json unchanged; skipping release"
+        if: steps.release.outputs.should_publish != 'true'
+        run: echo "${{ steps.release.outputs.reason }}; skipping release"
 
       - name: Regenerate client
-        if: steps.changes.outputs.changed == 'true'
+        if: steps.release.outputs.should_publish == 'true'
         run: npm run generate
 
       - name: Build package
-        if: steps.changes.outputs.changed == 'true'
+        if: steps.release.outputs.should_publish == 'true'
         run: npm run build
 
-      - name: Bump patch version
-        if: steps.changes.outputs.changed == 'true'
+      - name: Resolve package version
+        if: steps.release.outputs.should_publish == 'true'
         id: version
         run: |
-          npm version patch --no-git-tag-version
+          if [ "${{ steps.release.outputs.bump_version }}" = "true" ]; then
+            npm version patch --no-git-tag-version
+          fi
           VERSION="$(node -e "console.log(JSON.parse(require('node:fs').readFileSync('package.json', 'utf8')).version)")"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Commit release snapshot
-        if: steps.changes.outputs.changed == 'true'
+        if: steps.release.outputs.should_publish == 'true'
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add openapi/openapi.json src/generated package.json package-lock.json
-          git commit -m "chore(release): publish v$VERSION"
-          git tag "v$VERSION"
+          if git diff --cached --quiet; then
+            echo "No release snapshot changes to commit"
+          else
+            git commit -m "chore(release): publish v$VERSION"
+          fi
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "Tag v$VERSION already exists"
+          else
+            git tag "v$VERSION"
+          fi
 
       - name: Publish to npm
-        if: steps.changes.outputs.changed == 'true'
+        if: steps.release.outputs.should_publish == 'true'
         run: npm publish --access public
 
       - name: Push release commit and tag
-        if: steps.changes.outputs.changed == 'true'
+        if: steps.release.outputs.should_publish == 'true'
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: git push origin main --follow-tags
